@@ -102,24 +102,22 @@ class _MousePageState extends State<MousePage> {
               4,
               (map[event.pointer]! - curOffset).dy ~/ 6,
             ]);
-            print('${event.pointer} onPointerMove -> ${(map[event.pointer]! - curOffset).dy}');
+            // print('${event.pointer} onPointerMove -> ${(map[event.pointer]! - curOffset).dy}');
             map[event.pointer] = curOffset;
           }
           return;
         }
-        // print('onPointerMove -> $event ${event.pressure}');
-
         Offset curOffset = event.position;
         Offset diff = curOffset - map[event.pointer]!;
-        if (diff.dx.abs() > 1 || diff.dy.abs() > 1) {
+        if (diff.dx.abs() > 0.5 || diff.dy.abs() > 0.5) {
           // print('event.distance -> ${event.delta.distance}');
-          double bei = min(10, event.delta.distance);
-          bei = max(1, bei);
+          double muiti = min(10, event.delta.distance);
+          muiti = max(2, muiti);
           currentAction = 1;
           socket.add([
             1,
-            (diff.dx * bei).round(),
-            (diff.dy * bei).round(),
+            (diff.dx * muiti).round(),
+            (diff.dy * muiti).round(),
           ]);
           map[event.pointer] = curOffset;
         }
@@ -128,6 +126,7 @@ class _MousePageState extends State<MousePage> {
       },
       onPointerSignal: (event) {},
       onPointerUp: (event) {
+        map.remove(event.pointer);
         if (currentAction == 0) {
           // channel.sink.add('onlefttap:');
 
